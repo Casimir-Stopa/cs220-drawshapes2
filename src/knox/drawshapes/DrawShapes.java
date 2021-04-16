@@ -28,20 +28,24 @@ public class DrawShapes extends JFrame
     private enum ShapeType {
         SQUARE,
         CIRCLE,
-        RECTANGLE
+        RECTANGLE,
+       
     }
     
     private DrawShapesPanel shapePanel;
     private Scene scene;
+    private Scene resetScene = scene;
     private ShapeType shapeType = ShapeType.SQUARE;
     private Color color = Color.RED;
     private Point startDrag;
-
+    
+    
 
     public DrawShapes(int width, int height)
     {
         setTitle("Draw Shapes!");
         scene=new Scene();
+        
         
         // create our canvas, add to this frame's content pane
         shapePanel = new DrawShapesPanel(width,height,scene);
@@ -89,6 +93,7 @@ public class DrawShapes extends JFrame
                                 100, 
                                 200,
                                 color));
+                    
                     }
                     
                 } else if (e.getButton()==MouseEvent.BUTTON2) {
@@ -141,17 +146,31 @@ public class DrawShapes extends JFrame
 
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                // TODO use this to grow/shrink shapes
+            	if (e.getWheelRotation() < 0) {
+                    System.out.println("Mouse wheel up");
+                    scene.scale(1.50);
+                    repaint();
+
+                } else {
+                    System.out.println("Mouse wheel down");
+                    scene.scale(0.75);
+                    repaint();
+
+                }
             }
             
         };
         shapePanel.addMouseMotionListener(a);
         shapePanel.addMouseListener(a);
+        shapePanel.addMouseWheelListener(a);
+
     }
     
     /**
      * Initialize the menu options
      */
+    
+    
     private void initializeMenu()
     {
         // menu bar
@@ -225,7 +244,7 @@ public class DrawShapes extends JFrame
         // so let's use a helper method
         
         // color menu
-        JMenu colorMenu = new JMenu("Color");
+        JMenu colorMenu = new JMenu("Primary Colors");
         menuBar.add(colorMenu);
 
         
@@ -250,8 +269,20 @@ public class DrawShapes extends JFrame
             }
         });
         
-        //green color
-        addToMenu(colorMenu, "Green", new ActionListener() {
+     // yellow color
+        addToMenu(colorMenu, "Yellow", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
+                System.out.println(text);
+                // change the color instance variable to yellow
+                color = Color.YELLOW;
+            }
+        });
+        
+        JMenu secretColorMenu = new JMenu("Secondary Colors"); //NEW FEATURES a second color menu 
+        menuBar.add(secretColorMenu);
+  
+        addToMenu(secretColorMenu, "Green", new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String text=e.getActionCommand();
                 System.out.println(text);
@@ -259,6 +290,25 @@ public class DrawShapes extends JFrame
                 color = Color.GREEN;
             }
         });
+        
+        addToMenu(secretColorMenu, "Orange", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
+                System.out.println(text);
+                // change the color instance variable to green
+                color = Color.ORANGE;
+            }
+        });
+        
+        addToMenu(secretColorMenu, "Purple", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
+                System.out.println(text);
+                // change the color instance variable to green
+                color = new Color(102, 0, 153); //NEW FEATURE CUSTOM COLOR
+            }
+        });
+        
         
         // shape menu
         JMenu shapeMenu = new JMenu("Shape");
@@ -281,6 +331,8 @@ public class DrawShapes extends JFrame
                 shapeType = ShapeType.CIRCLE;
             }
         });
+        
+        
         
         
         // operation mode menu
@@ -347,7 +399,32 @@ public class DrawShapes extends JFrame
             public void keyReleased(KeyEvent e){
             	// Called when you release a key and it goes up
             	System.out.println("key released: " + e.getKeyChar());
+            	
+            	//NEW FEATRUE select colors by typing their first letter
+            	//caps lock must be on
+            	if (e.getKeyChar() == KeyEvent.VK_Y) {	
+            		color = Color.YELLOW;
+            	}
+            	if (e.getKeyChar() == KeyEvent.VK_G) {
+            		color = Color.GREEN;
+            	}
+            	if (e.getKeyChar() == KeyEvent.VK_R) {		
+            		color = Color.RED;
+            	}
+            	if (e.getKeyChar() == KeyEvent.VK_B) {		
+            		color = Color.BLUE;
+            	}
+            	if (e.getKeyChar() == KeyEvent.VK_O) {		
+            		color = Color.ORANGE;
+            	}
+            	if (e.getKeyChar() == KeyEvent.VK_P) {		
+            		color = new Color(102, 0, 153); //NEW FEATURE Custom color makes purple
+            	}
+            
             }
+            
+   
+   
             public void keyTyped(KeyEvent e) {
             	// Gets called when you push a key down and then release it,
             	// without pushing any other keys in between
@@ -355,6 +432,16 @@ public class DrawShapes extends JFrame
             	if (e.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
             		scene.removeSelected();
             	}
+            	
+            	if (e.getKeyChar() == KeyEvent.VK_ESCAPE) { //NEW FEATURE closes the program
+            		setVisible(false);
+            	}
+            	
+            	if (e.getKeyChar() == KeyEvent.VK_C) { 
+            		setVisible(false);
+            	}
+            	
+            	
             	repaint();
             }
         });
