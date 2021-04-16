@@ -34,19 +34,15 @@ public class DrawShapes extends JFrame
     
     private DrawShapesPanel shapePanel;
     private Scene scene;
-    private Scene resetScene = scene;
     private ShapeType shapeType = ShapeType.SQUARE;
     private Color color = Color.RED;
     private Point startDrag;
     
-    
-
     public DrawShapes(int width, int height)
     {
         setTitle("Draw Shapes!");
         scene=new Scene();
-        
-        
+          
         // create our canvas, add to this frame's content pane
         shapePanel = new DrawShapesPanel(width,height,scene);
         this.getContentPane().add(shapePanel, BorderLayout.CENTER);
@@ -145,7 +141,7 @@ public class DrawShapes extends JFrame
             }
 
             @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
+            public void mouseWheelMoved(MouseWheelEvent e) { //NEW FEATURE implemented scroll as the TODO stub stated
             	if (e.getWheelRotation() < 0) {
                     System.out.println("Mouse wheel up");
                     scene.scale(1.50);
@@ -436,12 +432,7 @@ public class DrawShapes extends JFrame
             	if (e.getKeyChar() == KeyEvent.VK_ESCAPE) { //NEW FEATURE closes the program
             		setVisible(false);
             	}
-            	
-            	if (e.getKeyChar() == KeyEvent.VK_C) { 
-            		setVisible(false);
-            	}
-            	
-            	
+            	  	
             	repaint();
             }
         });
